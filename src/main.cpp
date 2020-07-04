@@ -15,13 +15,14 @@
 #define LIS3MDL_FROM_FS_12G_TO_G (float)(2281.0)
 #define LIS3MDL_FROM_FS_16G_TO_G (float)(1711.0)
 
-static const uint8_t cs_pins[MAG_SENSOR_NUM] = {28};  //, 27}; // chip select
-static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {33}; //, 34};
-static const uint8_t disp_pin = 39;                   // reading laser disp sensor A20
+// This is for Vani's Teensy 3.6
+// static const uint8_t cs_pins[MAG_SENSOR_NUM] = {28};  //, 27}; // chip select
+// static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {33}; //, 34};
+// static const uint8_t disp_pin = 39;                   // reading laser disp sensor A20
 
-//// This is for Teensy 4.0
-//static const uint8_t cs_pins[MAG_SENSOR_NUM] = {8}; // chip select
-//static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {14}; // Data ready
+//// This is for STissue Teensy 4.0
+static const uint8_t cs_pins[MAG_SENSOR_NUM] = {23}; // , 22, 21,20, 19, 18, 17, 16, 25, 11};// chip select 
+static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {0}; // , 2, 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
 
 byte Chip_ID;
 
