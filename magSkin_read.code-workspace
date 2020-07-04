@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "magSkin_Teensy",
+			"path": "..\\..\\..\\..\\..\\..\\PlatformIO\\Projects\\magSkin_Teensy"
+		}
+	],
+	"settings": {}
+}

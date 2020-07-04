@@ -1,0 +1,1 @@
+Copying the magnetic sensing code from Arduino to VScode and Git. The initial code is from Arduino_all_HIGH_Calibrated_1x5array_lasDisp_VS.ino
