@@ -2,9 +2,9 @@
 #include <SPI.h>
 
 //SPI1 pins for Teensy 3.6
-// #define SPI1_MISO 8
-// #define SPI1_MOSI 7
-// #define SPI1_SCK 27
+// #define SPI1_MISO 1
+// #define SPI1_MOSI 0
+// #define SPI1_SCK 32
 
 #define MAG_SENSOR_NUM 1  // quantity of sensors
 #define PROBEPIN 23      // For timing or debugging only
