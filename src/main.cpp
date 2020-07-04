@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+// constant values-> ALL_CAPS_USCORE_ABBRV
+// variables -> lowercase_underscore
+// functions -> camelCase() OR lowercase_underscore()
+// objects -> Capitalized
+
 //SPI1 pins for Teensy 3.6
 // #define SPI1_MISO 1
 // #define SPI1_MOSI 0
@@ -15,13 +20,13 @@
 #define LIS3MDL_FROM_FS_12G_TO_G (float)(2281.0)
 #define LIS3MDL_FROM_FS_16G_TO_G (float)(1711.0)
 
-static const uint8_t cs_pins[MAG_SENSOR_NUM] = {28};  //, 27}; // chip select
-static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {33}; //, 34};
+// static const uint8_t cs_pins[MAG_SENSOR_NUM] = {28};  //, 27}; // chip select
+// static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {33}; //, 34};
 static const uint8_t disp_pin = 39;                   // reading laser disp sensor A20
 
 //// This is for Teensy 4.0
-//static const uint8_t cs_pins[MAG_SENSOR_NUM] = {8}; // chip select
-//static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {14}; // Data ready
+static const uint8_t cs_pins[MAG_SENSOR_NUM] = {23}; // chip select
+static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {0}; // Data ready
 
 byte Chip_ID;
 
