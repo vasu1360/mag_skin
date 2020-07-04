@@ -18,7 +18,7 @@
 // This is for Vani's Teensy 3.6
 // static const uint8_t cs_pins[MAG_SENSOR_NUM] = {28};  //, 27}; // chip select
 // static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {33}; //, 34};
-// static const uint8_t disp_pin = 39;                   // reading laser disp sensor A20
+static const uint8_t disp_pin = 39;                   // reading laser disp sensor A20
 
 //// This is for STissue Teensy 4.0
 static const uint8_t cs_pins[MAG_SENSOR_NUM] = {23}; // , 22, 21,20, 19, 18, 17, 16, 25, 11};// chip select 
