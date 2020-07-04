@@ -16,13 +16,13 @@
 #define LIS3MDL_FROM_FS_16G_TO_G (float)(1711.0)
 
 // This is for Vani's Teensy 3.6
-// static const uint8_t cs_pins[MAG_SENSOR_NUM] = {28};  //, 27}; // chip select
-// static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {33}; //, 34};
-static const uint8_t disp_pin = 39;                   // reading laser disp sensor A20
+// static const uint8_t CS_PINS[MAG_SENSOR_NUM] = {28};  //, 27}; // chip select
+// static const uint8_t RDY_PINS[MAG_SENSOR_NUM] = {33}; //, 34};
+static const uint8_t DISP_PIN = 39;                   // reading laser disp sensor A20
 
 //// This is for STissue Teensy 4.0
-static const uint8_t cs_pins[MAG_SENSOR_NUM] = {23}; // , 22, 21,20, 19, 18, 17, 16, 25, 11};// chip select 
-static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {0}; // , 2, 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
+static const uint8_t CS_PINS[MAG_SENSOR_NUM] = {23}; // , 22, 21,20, 19, 18, 17, 16, 25, 11};// chip select 
+static const uint8_t RDY_PINS[MAG_SENSOR_NUM] = {0}; // , 2, 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
 
 byte Chip_ID;
 
@@ -40,19 +40,19 @@ int mytime = 0;
 
 float avg_chip_mG[3][MAG_SENSOR_NUM] = {};
 
-void toggle_CS_pins(bool low_high); //declare the function before it's used
+void toggle_CS_PINS(bool low_high); //declare the function before it's used
 
 void setup()
 {
     Serial.begin(115200);
     delay(3000);
     loop_control_period = round(1000000 * (1.0 / LOOP_FREQUENCY)); //This is for loop control If you use micros() for timing, change 1000 to 1000000
-    pinMode(disp_pin, INPUT);
+    pinMode(DISP_PIN, INPUT);
     for (int i = 0; i < MAG_SENSOR_NUM; i++)
     {
-        pinMode(cs_pins[i], OUTPUT);
-        digitalWriteFast(cs_pins[i], HIGH);
-        pinMode(RDY_pins[i], INPUT);
+        pinMode(CS_PINS[i], OUTPUT);
+        digitalWriteFast(CS_PINS[i], HIGH);
+        pinMode(RDY_PINS[i], INPUT);
     }
 
     pinMode(PROBEPIN, OUTPUT);
@@ -72,10 +72,10 @@ void setup()
 
     for (int i = 0; i < MAG_SENSOR_NUM; i++)
     {
-        digitalWriteFast(cs_pins[i], LOW);
+        digitalWriteFast(CS_PINS[i], LOW);
         SPI1.transfer(0x0F | 0xC0);    // 0b10001111: 0x80 represents write mode, 0x21 represents Register: Control 2
         Chip_ID = SPI1.transfer(0x00); // b00000000
-        digitalWriteFast(cs_pins[i], HIGH);
+        digitalWriteFast(CS_PINS[i], HIGH);
         delayMicroseconds(100);
         if (Chip_ID == 61)
         {
@@ -97,16 +97,16 @@ void setup()
          1     0        +-12             2281
          1     1        +-16             1711
   **********************************************************************************************************************/
-    toggle_CS_pins(LOW);       // RESET
+    toggle_CS_PINS(LOW);       // RESET
     SPI1.transfer(0x21 | 0x40); // 0b01100001: 0x00 represents write mode, 0x21 represents Register: Control 2
     SPI1.transfer(0x08);        // b00001000
-    toggle_CS_pins(HIGH);
+    toggle_CS_PINS(HIGH);
     delay(10);
 
-    toggle_CS_pins(LOW);       // Set FS = 16
+    toggle_CS_PINS(LOW);       // Set FS = 16
     SPI1.transfer(0x21 | 0x40); // 0b01100001: 0x00 represents write mode, 0x21 represents Register: Control 2
     SPI1.transfer(0x60);        //
-    toggle_CS_pins(HIGH);
+    toggle_CS_PINS(HIGH);
     delayMicroseconds(100);
 
     /******************************************************************************************************************
@@ -115,10 +115,10 @@ void setup()
     BIT 7    |  BIT 6  |  BIT 5  |   BIT 4  |  BIT 3   |   BIT 2   |     BIT 1    |   BIT 0
     TEMP_EN   |  OM1    |   OM0   |    DO2   |   DO1    |    DO0    |   FAST_ODR   |    ST
   **********************************************************************************************************************/
-    toggle_CS_pins(LOW);
+    toggle_CS_PINS(LOW);
     SPI1.transfer(0x20 | 0x40); // 0b00100000: 0x00 represents write mode, 0x20 represents Register: Control 1
     SPI1.transfer(0x02);        // b00000010
-    toggle_CS_pins(HIGH);
+    toggle_CS_PINS(HIGH);
     delayMicroseconds(100);
 
     /******************************************************************************************************************
@@ -127,10 +127,10 @@ void setup()
     BIT 7    |  BIT 6  |  BIT 5  |   BIT 4  |  BIT 3   |   BIT 2   |     BIT 1    |   BIT 0
       0      |    0    |    0    |     0    |   OMZ1   |    OMZ0   |      BLE     |    0
   **********************************************************************************************************************/
-    toggle_CS_pins(LOW);
+    toggle_CS_PINS(LOW);
     SPI1.transfer(0x23 | 0x40); // 0b00100011 : 0x00 represents write mode, 0x23 represents Register: Control 4
     SPI1.transfer(0x00);        // b00000000 - low power, 5.3 mgauss RMS noise, start up time 1.2ms, TON duration 0.9ms
-    toggle_CS_pins(HIGH);
+    toggle_CS_PINS(HIGH);
     delayMicroseconds(100);
 
     /******************************************************************************************************************
@@ -139,10 +139,10 @@ void setup()
     BIT 7    |  BIT 6  |  BIT 5  |   BIT 4  |  BIT 3   |   BIT 2   |     BIT 1    |   BIT 0
       0      |    0    |    LP   |     0    |    0     |    SIM    |      MD1     |    MD0
   **********************************************************************************************************************/
-    toggle_CS_pins(LOW);
+    toggle_CS_PINS(LOW);
     SPI1.transfer(0x22 | 0x40); // 0b00100010: 0x00 represents write mode, 0x22 represents Register: Control 3
     SPI1.transfer(0x00);        // b00000000 - continuous measurement mode
-    toggle_CS_pins(HIGH);
+    toggle_CS_PINS(HIGH);
     delayMicroseconds(100);
 
     /******************************************************************************************************************
@@ -151,10 +151,10 @@ void setup()
       BIT 7    |  BIT 6  |  BIT 5  |   BIT 4  |  BIT 3   |   BIT 2   |     BIT 1    |   BIT 0
     FAST_READ   |   BDU   |    0    |     0    |   0      |     0     |      0       |    0
   **********************************************************************************************************************/
-    toggle_CS_pins(LOW);
+    toggle_CS_PINS(LOW);
     SPI1.transfer(0x24 | 0x40); // 0b00100100: 0x00 represents write mode, 0x24 represents Register: Control 5
     SPI1.transfer(0x00);        // b00000000
-    toggle_CS_pins(HIGH);
+    toggle_CS_PINS(HIGH);
     delay(100);
 
     Serial.println("Initialization complete");
@@ -188,14 +188,14 @@ void setup()
 
 void loop()
 {
-    // float displacement_laser = analogRead(disp_pin);
+    // float displacement_laser = analogRead(DISP_PIN);
     // displacement_laser = map(displacement_laser,10,1023,0,3.3); //in mm
 
-    if (digitalRead(RDY_pins[0]) == HIGH)
-    { //&& digitalRead(RDY_pins[1]) == HIGH && digitalRead(RDY_pins[2]) == HIGH) {
+    if (digitalRead(RDY_PINS[0]) == HIGH)
+    { //&& digitalRead(RDY_PINS[1]) == HIGH && digitalRead(RDY_PINS[2]) == HIGH) {
         for (int chip_iterator = 0; chip_iterator < MAG_SENSOR_NUM; chip_iterator++)
         {
-            digitalWriteFast(cs_pins[chip_iterator], LOW);
+            digitalWriteFast(CS_PINS[chip_iterator], LOW);
             SPI1.transfer(0xC0 | 0x28);     //10101000: 0x80 represents read mode, 0x28 represents OUT_X_L register
             data_reg[0] = SPI1.transfer(0); //OUT_X_L register
             data_reg[1] = SPI1.transfer(0); //OUT_X_H register
@@ -203,7 +203,7 @@ void loop()
             data_reg[3] = SPI1.transfer(0); //OUT_Y_H register
             data_reg[4] = SPI1.transfer(0); //OUT_Z_L register
             data_reg[5] = SPI1.transfer(0); //OUT_Z_H register
-            digitalWrite(cs_pins[chip_iterator], HIGH);
+            digitalWrite(CS_PINS[chip_iterator], HIGH);
 
             /* Get 18bits data, raw data unit is "count or LSB" */
             data16bit[0] = (int)(data_reg[1] << 8 | data_reg[0]);
@@ -243,17 +243,17 @@ void loop()
     }
 }
 
-void toggle_CS_pins(bool low_high)
+void toggle_CS_PINS(bool low_high)
 {
     // 10 sensors max per sensor MCU
-    digitalWriteFast(cs_pins[0], low_high);
-    digitalWriteFast(cs_pins[1], low_high);
-    digitalWriteFast(cs_pins[2], low_high);
-    digitalWriteFast(cs_pins[3], low_high);
-    digitalWriteFast(cs_pins[4], low_high);
-    digitalWriteFast(cs_pins[5], low_high);
-    digitalWriteFast(cs_pins[6], low_high);
-    digitalWriteFast(cs_pins[7], low_high);
-    digitalWriteFast(cs_pins[8], low_high);
-    digitalWriteFast(cs_pins[9], low_high);
+    digitalWriteFast(CS_PINS[0], low_high);
+    digitalWriteFast(CS_PINS[1], low_high);
+    digitalWriteFast(CS_PINS[2], low_high);
+    digitalWriteFast(CS_PINS[3], low_high);
+    digitalWriteFast(CS_PINS[4], low_high);
+    digitalWriteFast(CS_PINS[5], low_high);
+    digitalWriteFast(CS_PINS[6], low_high);
+    digitalWriteFast(CS_PINS[7], low_high);
+    digitalWriteFast(CS_PINS[8], low_high);
+    digitalWriteFast(CS_PINS[9], low_high);
 }
