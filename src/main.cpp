@@ -40,7 +40,7 @@ int mytime = 0;
 
 float avg_chip_mG[3][MAG_SENSOR_NUM] = {};
 
-void toggle_CS_pins(bool LOW_HIGH); //declare the function before it's used
+void toggle_CS_pins(bool low_high); //declare the function before it's used
 
 void setup()
 {
@@ -243,17 +243,17 @@ void loop()
     }
 }
 
-void toggle_CS_pins(bool LOW_HIGH)
+void toggle_CS_pins(bool low_high)
 {
     // 10 sensors max per sensor MCU
-    digitalWriteFast(cs_pins[0], LOW_HIGH);
-    digitalWriteFast(cs_pins[1], LOW_HIGH);
-    digitalWriteFast(cs_pins[2], LOW_HIGH);
-    digitalWriteFast(cs_pins[3], LOW_HIGH);
-    digitalWriteFast(cs_pins[4], LOW_HIGH);
-    digitalWriteFast(cs_pins[5], LOW_HIGH);
-    digitalWriteFast(cs_pins[6], LOW_HIGH);
-    digitalWriteFast(cs_pins[7], LOW_HIGH);
-    digitalWriteFast(cs_pins[8], LOW_HIGH);
-    digitalWriteFast(cs_pins[9], LOW_HIGH);
+    digitalWriteFast(cs_pins[0], low_high);
+    digitalWriteFast(cs_pins[1], low_high);
+    digitalWriteFast(cs_pins[2], low_high);
+    digitalWriteFast(cs_pins[3], low_high);
+    digitalWriteFast(cs_pins[4], low_high);
+    digitalWriteFast(cs_pins[5], low_high);
+    digitalWriteFast(cs_pins[6], low_high);
+    digitalWriteFast(cs_pins[7], low_high);
+    digitalWriteFast(cs_pins[8], low_high);
+    digitalWriteFast(cs_pins[9], low_high);
 }
