@@ -2,6 +2,11 @@
 #include <SPI.h>
 #include <Arduino.h>
 
+//SPI1 pins for Teensy 3.6
+// #define SPI1_MISO 1
+// #define SPI1_MOSI 0
+// #define SPI1_SCK 32
+
 #define MAG_SENSOR_NUM 1  // quantity of sensors
 #define Probe_pin 23      // For timing or debugging only
 #define SPISPEED 10000000 // Arduino Mega
@@ -54,17 +59,20 @@ void setup()
     digitalWriteFast(Probe_pin, LOW);
 
     delay(100);
-    SPI.begin(); //start the spi-bus
+    //  SPI.setSCK(SPI1_SCK);
+    //  SPI.setMOSI(SPI1_MOSI);
+    //  SPI.setMISO(SPI1_MISO);
+    SPI1.begin(); //start the spi-bus
     delay(100);
 
-    SPI.beginTransaction(SPISettings(SPISPEED, MSBFIRST, SPI_MODE0)); // start SPI
+    SPI1.beginTransaction(SPISettings(SPISPEED, MSBFIRST, SPI_MODE0)); // start SPI
     delay(1000);
 
     for (int i = 0; i < MAG_SENSOR_NUM; i++)
     {
         digitalWriteFast(cs_pins[i], LOW);
-        SPI.transfer(0x0F | 0xC0);    // 0b10001111: 0x80 represents write mode, 0x21 represents Register: Control 2
-        Chip_ID = SPI.transfer(0x00); // b00000000
+        SPI1.transfer(0x0F | 0xC0);    // 0b10001111: 0x80 represents write mode, 0x21 represents Register: Control 2
+        Chip_ID = SPI1.transfer(0x00); // b00000000
         digitalWriteFast(cs_pins[i], HIGH);
         delayMicroseconds(100);
         if (Chip_ID == 61)
@@ -88,14 +96,14 @@ void setup()
          1     1        +-16             1711
   **********************************************************************************************************************/
     toggle_CS_pins(LOW);       // RESET
-    SPI.transfer(0x21 | 0x40); // 0b01100001: 0x00 represents write mode, 0x21 represents Register: Control 2
-    SPI.transfer(0x08);        // b00001000
+    SPI1.transfer(0x21 | 0x40); // 0b01100001: 0x00 represents write mode, 0x21 represents Register: Control 2
+    SPI1.transfer(0x08);        // b00001000
     toggle_CS_pins(HIGH);
     delay(10);
 
     toggle_CS_pins(LOW);       // Set FS = 16
-    SPI.transfer(0x21 | 0x40); // 0b01100001: 0x00 represents write mode, 0x21 represents Register: Control 2
-    SPI.transfer(0x60);        //
+    SPI1.transfer(0x21 | 0x40); // 0b01100001: 0x00 represents write mode, 0x21 represents Register: Control 2
+    SPI1.transfer(0x60);        //
     toggle_CS_pins(HIGH);
     delayMicroseconds(100);
 
@@ -106,8 +114,8 @@ void setup()
     TEMP_EN   |  OM1    |   OM0   |    DO2   |   DO1    |    DO0    |   FAST_ODR   |    ST
   **********************************************************************************************************************/
     toggle_CS_pins(LOW);
-    SPI.transfer(0x20 | 0x40); // 0b00100000: 0x00 represents write mode, 0x20 represents Register: Control 1
-    SPI.transfer(0x02);        // b00000010
+    SPI1.transfer(0x20 | 0x40); // 0b00100000: 0x00 represents write mode, 0x20 represents Register: Control 1
+    SPI1.transfer(0x02);        // b00000010
     toggle_CS_pins(HIGH);
     delayMicroseconds(100);
 
@@ -118,8 +126,8 @@ void setup()
       0      |    0    |    0    |     0    |   OMZ1   |    OMZ0   |      BLE     |    0
   **********************************************************************************************************************/
     toggle_CS_pins(LOW);
-    SPI.transfer(0x23 | 0x40); // 0b00100011 : 0x00 represents write mode, 0x23 represents Register: Control 4
-    SPI.transfer(0x00);        // b00000000 - low power, 5.3 mgauss RMS noise, start up time 1.2ms, TON duration 0.9ms
+    SPI1.transfer(0x23 | 0x40); // 0b00100011 : 0x00 represents write mode, 0x23 represents Register: Control 4
+    SPI1.transfer(0x00);        // b00000000 - low power, 5.3 mgauss RMS noise, start up time 1.2ms, TON duration 0.9ms
     toggle_CS_pins(HIGH);
     delayMicroseconds(100);
 
@@ -130,8 +138,8 @@ void setup()
       0      |    0    |    LP   |     0    |    0     |    SIM    |      MD1     |    MD0
   **********************************************************************************************************************/
     toggle_CS_pins(LOW);
-    SPI.transfer(0x22 | 0x40); // 0b00100010: 0x00 represents write mode, 0x22 represents Register: Control 3
-    SPI.transfer(0x00);        // b00000000 - continuous measurement mode
+    SPI1.transfer(0x22 | 0x40); // 0b00100010: 0x00 represents write mode, 0x22 represents Register: Control 3
+    SPI1.transfer(0x00);        // b00000000 - continuous measurement mode
     toggle_CS_pins(HIGH);
     delayMicroseconds(100);
 
@@ -142,8 +150,8 @@ void setup()
     FAST_READ   |   BDU   |    0    |     0    |   0      |     0     |      0       |    0
   **********************************************************************************************************************/
     toggle_CS_pins(LOW);
-    SPI.transfer(0x24 | 0x40); // 0b00100100: 0x00 represents write mode, 0x24 represents Register: Control 5
-    SPI.transfer(0x00);        // b00000000
+    SPI1.transfer(0x24 | 0x40); // 0b00100100: 0x00 represents write mode, 0x24 represents Register: Control 5
+    SPI1.transfer(0x00);        // b00000000
     toggle_CS_pins(HIGH);
     delay(100);
 
@@ -151,7 +159,7 @@ void setup()
     delay(100);
 
     //    Ending the SPI transaction
-    SPI.endTransaction();
+    SPI1.endTransaction();
 
     while (!Serial && (millis() <= 5000))
         ; // WAIT UP TO 5000 MILLISECONDS FOR SERIAL OUTPUT CONSOLE
@@ -162,7 +170,7 @@ void setup()
     Serial.println("Time(millis)     X-axis     Y-axis      Z-axis");
 
     delay(2000);
-    SPI.beginTransaction(SPISettings(SPISPEED, MSBFIRST, SPI_MODE0)); // start SPI
+    SPI1.beginTransaction(SPISettings(SPISPEED, MSBFIRST, SPI_MODE0)); // start SPI
 
     //  //find the baseline readings before starting the code
     //  for (int chip_iterator = 0; chip_iterator < MAG_SENSOR_NUM; chip_iterator++) {
@@ -186,13 +194,13 @@ void loop()
         for (int chip_iterator = 0; chip_iterator < MAG_SENSOR_NUM; chip_iterator++)
         {
             digitalWriteFast(cs_pins[chip_iterator], LOW);
-            SPI.transfer(0xC0 | 0x28);     //10101000: 0x80 represents read mode, 0x28 represents OUT_X_L register
-            data_reg[0] = SPI.transfer(0); //OUT_X_L register
-            data_reg[1] = SPI.transfer(0); //OUT_X_H register
-            data_reg[2] = SPI.transfer(0); //OUT_Y_L register
-            data_reg[3] = SPI.transfer(0); //OUT_Y_H register
-            data_reg[4] = SPI.transfer(0); //OUT_Z_L register
-            data_reg[5] = SPI.transfer(0); //OUT_Z_H register
+            SPI1.transfer(0xC0 | 0x28);     //10101000: 0x80 represents read mode, 0x28 represents OUT_X_L register
+            data_reg[0] = SPI1.transfer(0); //OUT_X_L register
+            data_reg[1] = SPI1.transfer(0); //OUT_X_H register
+            data_reg[2] = SPI1.transfer(0); //OUT_Y_L register
+            data_reg[3] = SPI1.transfer(0); //OUT_Y_H register
+            data_reg[4] = SPI1.transfer(0); //OUT_Z_L register
+            data_reg[5] = SPI1.transfer(0); //OUT_Z_H register
             digitalWrite(cs_pins[chip_iterator], HIGH);
 
             /* Get 18bits data, raw data unit is "count or LSB" */
