@@ -1,14 +1,13 @@
-
-#include <SPI.h>
 #include <Arduino.h>
+#include <SPI.h>
 
 //SPI1 pins for Teensy 3.6
-// #define SPI1_MISO 1
-// #define SPI1_MOSI 0
-// #define SPI1_SCK 32
+// #define SPI1_MISO 8
+// #define SPI1_MOSI 7
+// #define SPI1_SCK 27
 
 #define MAG_SENSOR_NUM 1  // quantity of sensors
-#define Probe_pin 23      // For timing or debugging only
+#define PROBEPIN 23      // For timing or debugging only
 #define SPISPEED 10000000 // Arduino Mega
 #define LOOP_FREQUENCY 1000
 #define LIS3MDL_FROM_FS_4G_TO_G (float)(6842.0)
@@ -55,13 +54,15 @@ void setup()
         pinMode(RDY_pins[i], INPUT);
     }
 
-    pinMode(Probe_pin, OUTPUT);
-    digitalWriteFast(Probe_pin, LOW);
+    pinMode(PROBEPIN, OUTPUT);
+    digitalWriteFast(PROBEPIN, LOW);
+    // pinMode(SPI1_SCK, OUTPUT);
+    // pinMode(SPI1_MOSI, OUTPUT);
+    // pinMode(SPI1_MISO, INPUT);
 
-    delay(100);
-    //  SPI.setSCK(SPI1_SCK);
-    //  SPI.setMOSI(SPI1_MOSI);
-    //  SPI.setMISO(SPI1_MISO);
+    // SPI1.setSCK(SPI1_SCK);
+    // SPI1.setMOSI(SPI1_MOSI);
+    // SPI1.setMISO(SPI1_MISO);
     SPI1.begin(); //start the spi-bus
     delay(100);
 
@@ -181,7 +182,7 @@ void setup()
     //    }
     //  }
 
-    Serial.println("Calibration Over!");
+    // Serial.println("Calibration Over!");
 }
 
 void loop()
@@ -232,7 +233,7 @@ void loop()
         }
 
         Serial.println(" ");
-        digitalWriteFast(Probe_pin, !digitalRead(Probe_pin));
+        digitalWriteFast(PROBEPIN, !digitalRead(PROBEPIN));
         while (micros() < (loop_timing + loop_control_period))
         {
             //wait...
@@ -243,9 +244,15 @@ void loop()
 
 void toggle_CS_pins(bool LOW_HIGH)
 {
+    // 10 sensors max per sensor MCU
     digitalWriteFast(cs_pins[0], LOW_HIGH);
     digitalWriteFast(cs_pins[1], LOW_HIGH);
     digitalWriteFast(cs_pins[2], LOW_HIGH);
     digitalWriteFast(cs_pins[3], LOW_HIGH);
     digitalWriteFast(cs_pins[4], LOW_HIGH);
+    digitalWriteFast(cs_pins[5], LOW_HIGH);
+    digitalWriteFast(cs_pins[6], LOW_HIGH);
+    digitalWriteFast(cs_pins[7], LOW_HIGH);
+    digitalWriteFast(cs_pins[8], LOW_HIGH);
+    digitalWriteFast(cs_pins[9], LOW_HIGH);
 }
