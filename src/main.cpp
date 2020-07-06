@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+// constant values-> ALL_CAPS_USCORE_ABBRV
+// variables -> lowercase_underscore
+// functions -> camelCase() OR lowercase_underscore()
+// objects -> Capitalized
+
 //SPI1 pins for Teensy 3.6
 // #define SPI1_MISO 1
 // #define SPI1_MOSI 0
