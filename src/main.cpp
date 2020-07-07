@@ -26,8 +26,8 @@
 static const uint8_t DISP_PIN = 39;                   // reading laser disp sensor A20
 
 //// This is for STissue Teensy 4.0
-static const uint8_t CS_PINS[MAG_SENSOR_NUM] = {23}; // , 22, 21,20, 19, 18, 17, 16, 25, 11};// chip select 
-static const uint8_t RDY_PINS[MAG_SENSOR_NUM] = {0}; // , 2, 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
+static const uint8_t CS_PINS[MAG_SENSOR_NUM] = {23};//, 22, 21, 20, 19, 18, 17, 16, 25, 11};// chip select 
+static const uint8_t RDY_PINS[MAG_SENSOR_NUM] = {0};//, 2 , 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
 
 byte Chip_ID;
 
