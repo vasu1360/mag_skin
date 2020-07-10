@@ -25,8 +25,10 @@
 static const uint8_t disp_pin = 39;                   // reading laser disp sensor A20
 
 //// This is for Teensy 4.0
-static const uint8_t cs_pins[MAG_SENSOR_NUM] = {23}; // chip select
-static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {0}; // Data ready
+static const uint8_t cs_pins[MAG_SENSOR_NUM] = {23};//, 20, 19, 18, 17, 16, 25}; // chip select
+static const uint8_t RDY_pins[MAG_SENSOR_NUM] = {0};//, 4, 5, 6, 7, 8, 10}; // Data ready
+// static const uint8_t CS_PINS[MAG_SENSOR_NUM] = {23, 22, 21, 20, 19, 18, 17, 16, 25, 11};// chip select 
+// static const uint8_t RDY_PINS[MAG_SENSOR_NUM] = {0, 2 , 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
 
 byte Chip_ID;
 
@@ -238,6 +240,7 @@ void loop()
         }
 
         Serial.println(" ");
+        // delay(500);
         digitalWriteFast(PROBEPIN, !digitalRead(PROBEPIN));
         while (micros() < (loop_timing + loop_control_period))
         {
