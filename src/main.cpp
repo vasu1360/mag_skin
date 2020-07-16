@@ -11,7 +11,7 @@
 // #define SPI1_MOSI 0
 // #define SPI1_SCK 32
 
-#define MAG_SENSOR_NUM 1  // quantity of sensors
+#define MAG_SENSOR_NUM 2  // quantity of sensors
 #define PROBEPIN 23      // For timing or debugging only
 #define SPISPEED 10000000 // Arduino Mega
 #define LOOP_FREQUENCY 1000
@@ -26,8 +26,8 @@
 static const uint8_t DISP_PIN = 39;                   // reading laser disp sensor A20
 
 //// This is for STissue Teensy 4.0
-static const uint8_t CS_PINS[MAG_SENSOR_NUM] = {23};//, 22, 21, 20, 19, 18, 17, 16, 25, 11};// chip select 
-static const uint8_t RDY_PINS[MAG_SENSOR_NUM] = {0};//, 2 , 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
+static const uint8_t CS_PINS[MAG_SENSOR_NUM] = {25, 11};//{23, 22, 21, 20, 19, 18, 17, 16, 25, 11};// chip select 
+static const uint8_t RDY_PINS[MAG_SENSOR_NUM] = {10, 12};//{0, 2 , 3, 4, 5, 6, 7, 8, 10, 12};// Data ready
 
 byte Chip_ID;
 
@@ -196,8 +196,7 @@ void loop()
     // float displacement_laser = analogRead(DISP_PIN);
     // displacement_laser = map(displacement_laser,10,1023,0,3.3); //in mm
 
-    if (digitalRead(RDY_PINS[0]) == HIGH)
-    { //&& digitalRead(RDY_PINS[1]) == HIGH && digitalRead(RDY_PINS[2]) == HIGH) {
+    if (digitalRead(RDY_PINS[0]) == HIGH && digitalRead(RDY_PINS[1]) == HIGH && digitalRead(RDY_PINS[2]) == HIGH && digitalRead(RDY_PINS[3]) == HIGH && digitalRead(RDY_PINS[4]) == HIGH && digitalRead(RDY_PINS[5]) == HIGH && digitalRead(RDY_PINS[6]) == HIGH && digitalRead(RDY_PINS[7]) == HIGH && digitalRead(RDY_PINS[8]) == HIGH && digitalRead(RDY_PINS[9]) == HIGH) {
         for (int chip_iterator = 0; chip_iterator < MAG_SENSOR_NUM; chip_iterator++)
         {
             digitalWriteFast(CS_PINS[chip_iterator], LOW);
@@ -227,8 +226,8 @@ void loop()
                 }
             }
 
-            Serial.print(millis());
-            Serial.print(" ");
+            // Serial.print(millis());
+            // Serial.print(" ");
             // Serial.print(displacement_laser);
             // Serial.print(" ");
             for (int j = 0; j <= 2; j++)
